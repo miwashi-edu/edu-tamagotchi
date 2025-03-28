@@ -74,9 +74,9 @@ function addTamagotchi(species) {
     const pet = new Tamagotchi(`Pet ${petCount + 1}`, species, ctx, logDiv);
 
     const buttons = {
-        feed: createActionButton('Feed', pet.feed.bind(pet)),
-        play: createActionButton('Play', pet.play.bind(pet)),
-        pet: createActionButton('Pet', pet.pet.bind(pet)),
+        feed: createActionButton('Feed', () => pet.perform('feed', 'was fed')),
+        play: createActionButton('Play', () => pet.perform('play', 'played happily')),
+        pet:  createActionButton('Pet',  () => pet.perform('pet', 'enjoyed being petted')),
     };
 
     hookButtons(buttons, pet, statsDiv);

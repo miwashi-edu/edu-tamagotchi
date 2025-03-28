@@ -72,32 +72,32 @@ class Tamagotchi {
         }, 1000);
     }
 
-    async feed() {
+    async perform(action, message) {
         if (!this.alive) return `${this.name} is no longer alive.`;
-        await this.animateFrames(this.animations.feed);
-        this.hunger = Math.max(0, this.hunger - 1);
-        this.checkAlive();
-        this.log(`was fed.`);
-        return `${this.name} was fed.`;
-    }
 
-    async play() {
-        if (!this.alive) return `${this.name} is no longer alive.`;
-        await this.animateFrames(this.animations.play);
-        this.happiness = Math.min(10, this.happiness + 1);
-        this.hunger = Math.min(10, this.hunger + 1);
-        this.checkAlive();
-        this.log(`played happily.`);
-        return `${this.name} played happily.`;
-    }
+        const animation = this.animations[action];
+        if (!animation) return `Unknown action: ${action}`;
 
-    async pet() {
-        if (!this.alive) return `${this.name} is no longer alive.`;
-        await this.animateFrames(this.animations.pet);
-        this.happiness = Math.min(10, this.happiness + 0.5);
+        await this.animateFrames(animation);
+        switch (action) {
+            case 'feed':
+                this.hunger = Math.max(0, this.hunger - 1);
+                break;
+            case 'play':
+                this.happiness = Math.min(10, this.happiness + 1);
+                this.hunger = Math.min(10, this.hunger + 1);
+                break;
+            case 'pet':
+                this.happiness = Math.min(10, this.happiness + 0.5);
+                break;
+            // You can add more actions here
+            default:
+                return `Unknown action: ${action}`;
+        }
+
         this.checkAlive();
-        this.log(`enjoyed being petted.`);
-        return `${this.name} enjoyed being petted.`;
+        this.log(message);
+        return `${this.name} ${message}`;
     }
 
     status() {
@@ -182,7 +182,7 @@ class Tamagotchi {
             showFrame();
         });
     }
-    
+
     log(message) {
         if (!this.logDiv) return;
 
