@@ -4,6 +4,21 @@ const CANVAS_HEIGHT = 256;
 let petCount = 0;
 let numberOfPets = 0;
 
+const calloutMessages = [
+    "Don't forget to feed your Tamagotchi!",
+    "Playtime is important!",
+    "Petting makes me happy!",
+    "Too many pets? Try deleting one!",
+    "Happiness fades with time...",
+    "Keep an eye on those stats!"
+];
+
+setInterval(() => {
+    const message = calloutMessages[Math.floor(Math.random() * calloutMessages.length)];
+    showCallout(message);
+}, 10000); // every 10 seconds
+
+
 window.addEventListener('DOMContentLoaded', () => {
     const speciesSelect = document.getElementById('species-select');
     Tamagotchi.speciesList.forEach(species => {
@@ -21,6 +36,20 @@ document.getElementById('add-btn').addEventListener('click', () => {
     addTamagotchi(species);
     petCount++;
 });
+
+function showCallout(message, duration = 3000) {
+    const callout = document.getElementById('callout');
+    callout.textContent = message;
+    callout.style.display = 'block';
+    callout.style.opacity = '1';
+
+    setTimeout(() => {
+        callout.style.opacity = '0';
+        setTimeout(() => {
+            callout.style.display = 'none';
+        }, 300);
+    }, duration);
+}
 
 function addTamagotchi(species) {
     const container = document.getElementById('container');
