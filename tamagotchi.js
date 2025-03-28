@@ -90,7 +90,6 @@ class Tamagotchi {
             case 'pet':
                 this.happiness = Math.min(10, this.happiness + 0.5);
                 break;
-            // You can add more actions here
             default:
                 return `Unknown action: ${action}`;
         }
@@ -150,8 +149,6 @@ class Tamagotchi {
                 img.onload = () => {
                     ctx.clearRect(0, 0, canvas.width, canvas.height);
                     ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-
-                    // Draw index counter
                     ctx.fillStyle = 'rgba(0, 0, 0, 0.6)';
                     ctx.font = '16px monospace';
                     ctx.fillText(`${index + 1}/${frames.length}`, 8, 20);
