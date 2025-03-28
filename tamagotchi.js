@@ -42,7 +42,7 @@ class Tamagotchi {
             ]
         };
 
-        this.drawIdle();
+        this.draw('idle');
         this.startAging();
     }
 
@@ -96,10 +96,11 @@ class Tamagotchi {
             this.alive = false;
             clearInterval(this.ageInterval);
             this.log(`has died.`);
+            this.draw('dead'); // ← NEW
         }
     }
 
-    drawIdle() {
+    draw(state) {
         const ctx = this.ctx;
         const canvas = ctx.canvas;
         const img = new Image();
@@ -112,10 +113,11 @@ class Tamagotchi {
         img.onerror = () => {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             ctx.font = '16px monospace';
-            ctx.fillText('Idle', 10, 20);
+            ctx.fillStyle = (state === 'dead') ? 'red' : '#000';
+            ctx.fillText(state.charAt(0).toUpperCase() + state.slice(1), 10, 20);
         };
 
-        img.src = `images/${this.species}/idle.png`;
+        img.src = `images/${this.species}/${state}.png`;
     }
 
     animateFrames(frames) {
@@ -140,7 +142,7 @@ class Tamagotchi {
                         setTimeout(showFrame, 1000);
                     } else {
                         setTimeout(() => {
-                            this.drawIdle();
+                            this.draw('idle');
                             resolve();
                         }, 1000);
                     }
@@ -153,7 +155,7 @@ class Tamagotchi {
                         setTimeout(showFrame, 1000);
                     } else {
                         setTimeout(() => {
-                            this.drawIdle();
+                            this.draw('idle');
                             resolve();
                         }, 1000);
                     }
