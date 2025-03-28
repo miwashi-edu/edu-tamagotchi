@@ -25,22 +25,32 @@ class Tamagotchi {
         }
 
         this.animations = {
-            feed: [
-                `images/${this.species}/feed1.png`,
-                `images/${this.species}/feed2.png`,
-                `images/${this.species}/feed3.png`
-            ],
-            play: [
-                `images/${this.species}/play1.png`,
-                `images/${this.species}/play2.png`,
-                `images/${this.species}/play3.png`
-            ],
-            pet: [
-                `images/${this.species}/pet1.png`,
-                `images/${this.species}/pet2.png`,
-                `images/${this.species}/pet3.png`
-            ]
+            feed: {
+                repeat: 3,
+                frames: [
+                    `images/${this.species}/feed1.png`,
+                    `images/${this.species}/feed2.png`,
+                    `images/${this.species}/feed3.png`
+                ]
+            },
+            play: {
+                repeat: 3,
+                frames: [
+                    `images/${this.species}/play1.png`,
+                    `images/${this.species}/play2.png`,
+                    `images/${this.species}/play3.png`
+                ]
+            },
+            pet: {
+                repeat: 3,
+                frames: [
+                    `images/${this.species}/pet1.png`,
+                    `images/${this.species}/pet2.png`,
+                    `images/${this.species}/pet3.png`
+                ]
+            }
         };
+
 
         this.draw('idle');
         this.startAging();
@@ -120,53 +130,56 @@ class Tamagotchi {
         img.src = `images/${this.species}/${state}.png`;
     }
 
-    animateFrames(frames) {
+    animateFrames(animation) {
+        const ctx = this.ctx;
+        const canvas = ctx.canvas;
+        const frames = animation.frames;
+        const repeatCount = animation.repeat || 1;
+        const totalDuration = 1000; // 1 second total
+        const frameTime = totalDuration / frames.length;
+
         return new Promise((resolve) => {
-            const ctx = this.ctx;
-            const canvas = ctx.canvas;
+            let cycle = 0;
             let index = 0;
 
             const showFrame = () => {
                 const img = new Image();
-
                 img.onload = () => {
                     ctx.clearRect(0, 0, canvas.width, canvas.height);
                     ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
 
+                    // Draw index counter
                     ctx.fillStyle = 'rgba(0, 0, 0, 0.6)';
                     ctx.font = '16px monospace';
                     ctx.fillText(`${index + 1}/${frames.length}`, 8, 20);
-
-                    index++;
-                    if (index < frames.length) {
-                        setTimeout(showFrame, 1000);
-                    } else {
-                        setTimeout(() => {
-                            this.draw('idle');
-                            resolve();
-                        }, 1000);
-                    }
                 };
 
                 img.onerror = () => {
                     console.warn(`Failed to load image: ${img.src}`);
-                    index++;
-                    if (index < frames.length) {
-                        setTimeout(showFrame, 1000);
-                    } else {
-                        setTimeout(() => {
-                            this.draw('idle');
-                            resolve();
-                        }, 1000);
-                    }
                 };
 
                 img.src = frames[index];
+
+                index++;
+                if (index >= frames.length) {
+                    index = 0;
+                    cycle++;
+                }
+
+                if (cycle < repeatCount) {
+                    setTimeout(showFrame, frameTime);
+                } else {
+                    setTimeout(() => {
+                        this.draw('idle');
+                        resolve();
+                    }, frameTime);
+                }
             };
 
             showFrame();
         });
     }
+
 
     log(message) {
         if (!this.logDiv) return;
