@@ -1,7 +1,6 @@
 const MAXPETS = 4;
 const CANVAS_WIDTH = 256;
 const CANVAS_HEIGHT = 256;
-
 let petCount = 0;
 
 window.addEventListener('DOMContentLoaded', () => {
@@ -9,7 +8,7 @@ window.addEventListener('DOMContentLoaded', () => {
     Tamagotchi.speciesList.forEach(species => {
         const option = document.createElement('option');
         option.value = species;
-        option.textContent = species[0].toUpperCase() + species.slice(1); // Capitalize label
+        option.textContent = species[0].toUpperCase() + species.slice(1);
         speciesSelect.appendChild(option);
     });
 });
@@ -30,13 +29,17 @@ function addTamagotchi(species) {
     const canvas = createCanvas(petCount);
     const ctx = canvas.getContext('2d');
     const btnRow = createButtonRow();
+    const logToggleBtn = createLogToggleButton();
+    const logDiv = createLogDiv();
 
     petDiv.appendChild(statsDiv);
     petDiv.appendChild(canvas);
     petDiv.appendChild(btnRow);
+    petDiv.appendChild(logToggleBtn);
+    petDiv.appendChild(logDiv);
     container.appendChild(petDiv);
 
-    const pet = new Tamagotchi(`Pet ${petCount + 1}`, species, ctx);
+    const pet = new Tamagotchi(`Pet ${petCount + 1}`, species, ctx, logDiv);
 
     const buttons = {
         feed: createActionButton('Feed', pet.feed.bind(pet)),
@@ -46,6 +49,7 @@ function addTamagotchi(species) {
 
     hookButtons(buttons, pet, statsDiv);
     btnRow.append(buttons.feed, buttons.play, buttons.pet);
+
     setInterval(() => updateStats(statsDiv, pet), 1000);
 }
 
@@ -103,12 +107,29 @@ function setButtonsEnabled(buttons, enabled) {
 async function updateStats(statsDiv, pet) {
     const stats = await pet.status();
     statsDiv.innerText = `
-    Name: ${stats.name}
-    Species: ${stats.species}
-    Hunger: ${stats.hunger}
-    Happiness: ${stats.happiness}
-    Age: ${stats.age}
-    Alive: ${stats.alive ? 'Yes' : 'No'}
-    `.trim();
+Name: ${stats.name}
+Species: ${stats.species}
+Hunger: ${stats.hunger.toFixed(1)}
+Happiness: ${stats.happiness.toFixed(1)}
+Age: ${stats.age}
+Alive: ${stats.alive ? 'Yes' : 'No'}
+`.trim();
 }
 
+function createLogToggleButton() {
+    const btn = document.createElement('button');
+    btn.textContent = 'Toggle Log';
+    btn.className = 'log-toggle';
+    btn.onclick = () => {
+        const log = btn.nextElementSibling;
+        log.style.display = (log.style.display === 'none' ? 'block' : 'none');
+    };
+    return btn;
+}
+
+function createLogDiv() {
+    const div = document.createElement('div');
+    div.className = 'log';
+    div.style.display = 'none';
+    return div;
+}

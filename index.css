@@ -79,18 +79,20 @@ canvas {
     overflow-y: auto;
     width: 100%;
     margin-top: 0.5rem;
-    display: none;
     background: #f9f9f9;
     border: 1px solid #ccc;
     border-radius: 4px;
     padding: 0.5rem;
     font-size: 0.75rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
 }
 
 .log-entry {
     background: #e0f7fa;
     border-radius: 12px;
     padding: 0.3rem 0.6rem;
-    margin-bottom: 0.4rem;
-    display: inline-block;
+    width: fit-content;
 }
+
