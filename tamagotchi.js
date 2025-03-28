@@ -27,6 +27,7 @@ class Tamagotchi {
         this.animations = {
             feed: {
                 repeat: 3,
+                duration: 1000,
                 frames: [
                     `images/${this.species}/feed1.png`,
                     `images/${this.species}/feed2.png`,
@@ -35,6 +36,7 @@ class Tamagotchi {
             },
             play: {
                 repeat: 3,
+                duration: 1000,
                 frames: [
                     `images/${this.species}/play1.png`,
                     `images/${this.species}/play2.png`,
@@ -43,6 +45,7 @@ class Tamagotchi {
             },
             pet: {
                 repeat: 3,
+                duration: 1000,
                 frames: [
                     `images/${this.species}/pet1.png`,
                     `images/${this.species}/pet2.png`,
@@ -135,8 +138,8 @@ class Tamagotchi {
         const canvas = ctx.canvas;
         const frames = animation.frames;
         const repeatCount = animation.repeat || 1;
-        const totalDuration = 1000; // 1 second total
-        const frameTime = totalDuration / frames.length;
+        const duration = animation.duration || 1000;
+        const frameTime = duration / frames.length;
 
         return new Promise((resolve) => {
             let cycle = 0;
@@ -179,8 +182,7 @@ class Tamagotchi {
             showFrame();
         });
     }
-
-
+    
     log(message) {
         if (!this.logDiv) return;
 
