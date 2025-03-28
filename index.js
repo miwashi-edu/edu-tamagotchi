@@ -2,6 +2,7 @@ const MAXPETS = 4;
 const CANVAS_WIDTH = 256;
 const CANVAS_HEIGHT = 256;
 let petCount = 0;
+let numberOfPets = 0;
 
 window.addEventListener('DOMContentLoaded', () => {
     const speciesSelect = document.getElementById('species-select');
@@ -14,7 +15,7 @@ window.addEventListener('DOMContentLoaded', () => {
 });
 
 document.getElementById('add-btn').addEventListener('click', () => {
-    if (petCount >= MAXPETS) return;
+    if (numberOfPets >= MAXPETS) return;
 
     const species = document.getElementById('species-select').value;
     addTamagotchi(species);
@@ -30,6 +31,7 @@ function addTamagotchi(species) {
     const ctx = canvas.getContext('2d');
     const btnRow = createButtonRow();
     const logToggleBtn = createLogToggleButton();
+    const deleteBtn = createDeleteButton(petDiv);
     const logDiv = createLogDiv();
 
     petDiv.appendChild(statsDiv);
@@ -37,6 +39,7 @@ function addTamagotchi(species) {
     petDiv.appendChild(btnRow);
     petDiv.appendChild(logToggleBtn);
     petDiv.appendChild(logDiv);
+    petDiv.appendChild(deleteBtn);
     container.appendChild(petDiv);
 
     const pet = new Tamagotchi(`Pet ${petCount + 1}`, species, ctx, logDiv);
@@ -51,6 +54,7 @@ function addTamagotchi(species) {
     btnRow.append(buttons.feed, buttons.play, buttons.pet);
 
     setInterval(() => updateStats(statsDiv, pet), 1000);
+    numberOfPets++;
 }
 
 function createPetWrapper() {
@@ -123,6 +127,17 @@ function createLogToggleButton() {
     btn.onclick = () => {
         const log = btn.nextElementSibling;
         log.style.display = (log.style.display === 'none' ? 'block' : 'none');
+    };
+    return btn;
+}
+
+function createDeleteButton(petDiv) {
+    const btn = document.createElement('button');
+    btn.textContent = 'Delete';
+    btn.className = 'delete-btn';
+    btn.onclick = () => {
+        petDiv.remove();
+        numberOfPets--;
     };
     return btn;
 }
