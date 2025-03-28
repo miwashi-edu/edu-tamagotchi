@@ -31,7 +31,11 @@ class Tamagotchi {
                 frames: [
                     `images/${this.species}/feed1.png`,
                     `images/${this.species}/feed2.png`,
-                    `images/${this.species}/feed3.png`
+                    `images/${this.species}/feed3.png`,
+                    `images/${this.species}/feed4.png`,
+                    `images/${this.species}/feed5.png`,
+                    `images/${this.species}/feed6.png`,
+                    `images/${this.species}/feed7.png`,
                 ]
             },
             play: {
